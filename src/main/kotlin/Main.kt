@@ -12,13 +12,12 @@ const val DELAY = 500L
 suspend fun main() = coroutineScope {
     println("Starting correct...")
     correct()
-    println("Correct - done")
+    println("correct - done.")
 
     println("Starting wrong...")
     wrong()
-    println("wrong - done")
+    println("wrong - done.")
 }
-
 
 suspend fun correct() = coroutineScope {
     val from = 1
@@ -26,7 +25,7 @@ suspend fun correct() = coroutineScope {
     val semaphore = Semaphore(5)
 
     (from..to).map {
-        val r = async {
+        val r = async { // CoroutineScope
             println("$it Before permit: ${semaphore.availablePermits}")
 
             // Inside Coroutine Scope
@@ -61,7 +60,7 @@ suspend fun wrong() = coroutineScope {
         // This might not be what one intend if his goal is to limit concurrent executions of the suspending block.
         semaphore.withPermit {
             println("$it Before async: ${semaphore.availablePermits}")
-            val r = async {
+            val r = async { // CoroutineScope
                 delay(DELAY)
             }
             println("$it After async: ${semaphore.availablePermits}")
